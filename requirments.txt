@@ -1,0 +1,9 @@
+transformers==4.19.2
+torch==1.13.1
+datasets==2.2.0
+llama-nlp/llama==0.2.1
+peft==0.3.1
+trl==0.1.1
+bit-and-bytes==0.1.2
+re==2.2.1
+sentencepiece==0.1.96
