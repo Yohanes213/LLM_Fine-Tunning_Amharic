@@ -28,7 +28,7 @@ def normalize_char_level_missmatch(input_word):
     rep24=re.sub('[ጼ]','ፄ',rep23)
     rep25=re.sub('[ጽ]','ፅ',rep24)
     rep26=re.sub('[ጾ]','ፆ',rep25)
-    #Normalizing words with Labialized Amharic characters such as በልቱዋል or  በልቱአል to  በልቷል  
+    #Normalizing words with Labialized Amharic characters such as በልቱዋል or  በልቱአል to  በልቷል
     rep27=re.sub('(ሉ[ዋአ])','ሏ',rep26)
     rep28=re.sub('(ሙ[ዋአ])','ሟ',rep27)
     rep29=re.sub('(ቱ[ዋአ])','ቷ',rep28)
@@ -50,12 +50,12 @@ def normalize_char_level_missmatch(input_word):
     rep45=re.sub('(ጹ[ዋአ])','ጿ',rep44)
     rep46=re.sub('(ፉ[ዋአ])','ፏ',rep45)
     rep47=re.sub('[ቊ]','ቁ',rep46) #ቁ can be written as ቊ
-    rep48=re.sub('[ኵ]','ኩ',rep47) #ኩ can be also written as ኵ  
+    rep48=re.sub('[ኵ]','ኩ',rep47) #ኩ can be also written as ኵ
     return rep48
 def clean_document(document):
     """
     Clean a single document by removing links, English words, and unnecessary whitespace.
-    
+
     Args:
         document (str): The document text to clean.
 
@@ -78,3 +78,4 @@ def clean_document(document):
     #document = re.sub(r'[።]', ' ', document)
     #document = re.sub(r'፣','', document)
     return document
+
