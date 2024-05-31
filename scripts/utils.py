@@ -3,6 +3,7 @@ import evaluate
 import numpy as np
 from torch.utils.data import DataLoader
 import torch
+import pandas as pd
 
 def preprocess_article(row):
     article = row['article']
@@ -63,6 +64,7 @@ def compute_metrics_eval(y_pred, y_test):
   }
 
 
+
 def evaluate_model(model, tokenized_datasets, data_collator, device):
     eval_dataset = tokenized_datasets["test"].remove_columns(['article', 'category', 'word_count']).with_format("torch")
     eval_dataloader = DataLoader(eval_dataset, shuffle=True, batch_size=16, collate_fn=data_collator)
@@ -79,3 +81,51 @@ def evaluate_model(model, tokenized_datasets, data_collator, device):
         y_test.extend(batch["labels"].cpu().numpy())
 
     return compute_metrics_eval(y_pred, y_test)
+
+
+def generate_predictions(model, tokenized_datasets, device, id_to_category, num_samples=5):
+    # Assuming you have already defined your DataLoader for test data
+    test_dataloader = DataLoader(tokenized_datasets["test"], batch_size=1)
+
+    # Set the model to evaluation mode
+    model.eval()
+
+    # Define a list to store predictions
+    predictions = []
+
+    # Loop through the specified number of data points and make predictions
+    for i, batch in enumerate(test_dataloader):
+        if i >= num_samples:
+            break
+
+        # Move batch to appropriate device (CPU or GPU)
+        batch = {k: v.to(device) for k, v in batch.items() if k in ['input_ids', 'token_type_ids', 'attention_mask']}
+
+        with torch.no_grad():
+            # Forward pass
+            outputs = model(**batch)
+
+        # Get the predicted probabilities
+        probabilities = torch.softmax(outputs.logits, dim=1)
+
+        # Get the predicted label (index with highest probability)
+        predicted_label = torch.argmax(probabilities, dim=1).item()
+
+        # Append the predicted label to the list
+        predictions.append(predicted_label)
+
+    # Prepare data for DataFrame
+    data = {'article':[],
+                  'predicted_labels':[],
+                  'true_labels': [],
+                  'true_category': [],
+                  'predicted_category':[]}
+    for i in range(len(predictions)):
+        data['article'].append(tokenized_datasets['test'][i]['article'])
+        data['predicted_labels'].append(predictions[i])
+        data['true_labels'].append(tokenized_datasets['test'][i]['labels'])
+        data['true_category'].append(tokenized_datasets['test'][i]['category'])
+        data['predicted_category'].append(id_to_category[predictions[i]])
+
+    # Return DataFrame with predictions
+    return pd.DataFrame(data)
