@@ -2,6 +2,20 @@ import re
 
 #method to normalize character level missmatch such as ጸሀይ and ፀሐይ
 def normalize_char_level_missmatch(input_word):
+    """
+    Normalize character level mismatches in Ethiopian script.
+
+    This method replaces characters that are commonly interchanged or misspelled 
+    in Ethiopian scripts with a standard character. For example, it normalizes 
+    characters such as ጸሀይ and ፀሐይ to a standard form.
+
+    Args:
+        input_word (str): The input word containing potential character mismatches.
+
+    Returns:
+        str: The word with normalized characters.
+    """
+
     replacements = [
         ('[ሃኅኃሐሓኻ]', 'ሀ'), ('[ሑኁዅ]', 'ሁ'), ('[ኂሒኺ]', 'ሂ'), ('[ኌሔዄ]', 'ሄ'), ('[ሕኅ]', 'ህ'), ('[ኆሖኾ]', 'ሆ'),
         ('[ሠ]', 'ሰ'), ('[ሡ]', 'ሱ'), ('[ሢ]', 'ሲ'), ('[ሣ]', 'ሳ'), ('[ሤ]', 'ሴ'), ('[ሥ]', 'ስ'), ('[ሦ]', 'ሶ'),
@@ -41,7 +55,5 @@ def clean_document(document):
     document = re.sub(r'[\[\]\(\)]|:|\\', '', document)
     # Remove non-word characters
     document = re.sub(r'[^\w\s]','', document)
-    #document = re.sub(r'[።]', ' ', document)
-    #document = re.sub(r'፣','', document)
     return document
 
