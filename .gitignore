@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 # C extensions
 *.so
+front_end/node_modules
 # Distribution / packaging
 .Python
 build/
