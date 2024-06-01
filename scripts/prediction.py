@@ -4,8 +4,11 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 from preprocess import normalize_char_level_missmatch, clean_document
 from preprocess import normalize_char_level_missmatch, clean_document
+
+
 app = Flask(__name__)
 CORS(app)
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
