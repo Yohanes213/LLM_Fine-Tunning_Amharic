@@ -1,29 +1,41 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
       const newMessages = [...messages, { sender: "user", text: input }];
       setMessages(newMessages);
       setInput("");
 
-      // Simulate AI response
-      setTimeout(() => {
+      try {
+        const response = await axios.post('http://localhost:5001/predict', {
+          text: input,
+        });
+
+        const aiResponse = response.data.prediction;
+
         setMessages((prevMessages) => [
           ...prevMessages,
-          { sender: "ai", text: "response." },
+          { sender: "ai", text: aiResponse },
         ]);
-      }, 1000);
+      } catch (error) {
+        console.error("Error fetching AI response:", error);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "ai", text: "Error fetching response from AI." },
+        ]);
+      }
     }
   };
 
   return (
     <div className="flex flex-col items-center p-4 bg-white min-h-screen">
-      <h1 className="text-3xl text-slate-800 mt-16 font-extrabold">Amharic News Classifier </h1>
-      <div className="bg-slate-800 w-full max-w-lg rounded-lg shadow-lg p-4  mt-16">
+      <h1 className="text-3xl text-slate-800 mt-16 font-extrabold">Amharic News Classifier</h1>
+      <div className="bg-slate-800 w-full max-w-lg rounded-lg shadow-lg p-4 mt-16">
         <div className="h-96 overflow-y-auto">
           {messages.map((msg, index) => (
             <div key={index} className={`chat ${msg.sender === "user" ? "chat-end" : "chat-start"}`}>
