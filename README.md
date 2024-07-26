@@ -55,7 +55,6 @@ Here is a screenshot of the frontend for reference:
 
 
 ## Contributors
-------
 
 For a list of contributors, see the [CONTRIBUTORS.md](CONTRIBUTORS.md) file.
 
